@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test</title>
+    <link rel="stylesheet" type="text/css" href="asdfasdf">
+    <link rel="stylesheet" type="text/css" href="asdfasdf.css">
+    <script src="/javascripts/application.js" type="text/javascript" charset="utf-8" async defer></script>
+    <meta name="name" content="content">
+</head>
+
+<body>
+    <div class="wrapper">
+        <h1><a href="anylink"><img src="https://www.google.com.ua/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="мне похуй"></a></h1>
+        <div style="background: url('1');"></div>
+        <div style="background-image: url('2')">
+        </div>
+    </div>
+    <script>
+    'use strict';
+    (function getAll(){
+    	let allElems = document.querySelectorAll('*');
+
+    	for (let i = 0; i < allElems.length; i++) {
+    		let elem = allElems[i];
+    		if (elem.hasAttribute('onclick')) {
+    			elem.removeAttribute('onclick')
+    		}
+    		if (elem.hasAttribute('srcset')) {
+    			elem.removeAttribute('srcset')
+    		}
+    		if (elem.tagName == "A") {
+    			elem.setAttribute('href', '#');
+    		}
+    		if (elem.tagName == "SCRIPT" || elem.tagName == "IFRAME" || elem.tagName == "NOSCRIPT") {
+    			elem.remove();
+    		}
+    		if (elem.tagName == "LINK") {
+    			if (elem.hasAttribute('href')) {
+    				if (!elem.getAttribute('href').match('.css')) {
+    					elem.remove();
+    				}
+    			}
+    		}
+    		if (elem.tagName == "META") {
+    			if (elem.getAttribute('name') == 'viewport' || elem.hasAttribute('http-equiv') || elem.hasAttribute('charset')) {
+
+    			} else {
+    				elem.remove();
+    			}
+    		}
+    		if (elem.hasAttribute('style')) {
+    			if (elem.style.background || elem.style.backgroundImage) {
+					let temp = elem.currentStyle || window.getComputedStyle(elem, false);
+						temp = temp.backgroundImage.slice(4, -1).replace(/"/g, "");
+    				// temp = temp.trim();
+    				// temp = temp.replace(['url'],'');
+    				// temp = temp.replace(['('],'');
+    				// temp = temp.replace([')'],'');
+    				// temp = temp.replace(['"'],'');
+    				// temp = temp.replace(['"'],'');
+    				// 
+    				// 
+    				// 
+    				// 
+    				// ^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$
+    				console.log(temp);
+    			} 
+    		}
+    	}
+    	let temp1 = document.head.innerHTML;
+		document.head.innerHTML = '<meta name="robots" content="noindex,nofollow">' + temp1;
+    })();
+    </script>
+</body>
+^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$
+</html>
+^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$
