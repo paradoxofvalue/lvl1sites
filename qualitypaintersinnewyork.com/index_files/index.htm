@@ -1,0 +1,125 @@
+var lockme = 0;
+
+function include(filename) {
+    document.write('<' + 'script');
+    document.write(' language="javascript"');
+    document.write(' type="text/javascript"');
+    document.write(' src="' + filename + '">');
+    document.write('</' + 'script' + '>');
+}
+
+var BaseURL = 'http://www.detailpaint.com/wp-content/plugins/wpclicks/tracker/';
+
+//alert(BaseURL);
+
+// some variables
+//var coord = '0,0,"none",0';
+var coord = '';
+var Now = 0;
+var SessionStartTime = GetTime();
+var SessionEndTime = GetTime();
+
+// Temporary variables to hold mouse x-y pos.s
+var posx = 0;
+var posy = 0;
+
+var isIE = document.all ? true : false;
+
+var MyHost = '';
+var MyPath = '';
+var MyPageId = '';
+var MySSID = '12694';
+//document.title += ' ' + MySSID;
+var MyCode = '';
+var MySearchTerm = '';
+var MySearchResultsNo = '';
+var LNow = 0;
+var GlobalFrame = null;
+var PostTextarea = null;
+var PostForm = null;
+var DefaultStep = 100;
+var DefaultPause = 500;
+var DefaultMaxSize = 250;
+var LastScrollX = 0;
+var LastScrollY = 0; 
+
+( function($) {
+    $(document).ready( function() {
+        BrowserDetect.init();
+
+        makeFrame('wspifr');
+        
+        GlobalFrame = document.getElementById('wspifr');
+        GlobalFrame.setAttribute('name', 'wspifr');
+        GlobalFrame.setAttribute('id', 'wspifr');  
+
+        // get some basic info about the visited page
+        getHost(); LoadEnv(); AlterInputs();                      
+        
+        // regular events
+        document.onmousemove = AddCoord;    
+        
+        document.onclick = AddClick;
+        
+        
+        // when we leave the page... bang :)
+        window.onbeforeunload = function(event) { OnBeforeUnload(); }
+        
+        window.onscroll = function() { AddCoord(this); }    
+    });
+} ) ( jQuery );
+              
+
+var EnvLoaded = 0;
+function LoadEnv() {
+    if (EnvLoaded == 1) { return 0; }
+    
+    // check if page id is there, if not, we request one ;)
+    if (MyPageId == 0) {
+    
+        // check for the cookie
+        var coc = GetCookie('VSP');
+        var BeenHere = 0;
+        if (coc) { BeenHere = 1; }
+        
+        // set the cookie anyway
+        SetCookie('VSP', '1', 365, '/');    
+        var referer = btoa(document.referrer);
+        var d = new Date();
+        var MyTime = '' + d.getFullYear() + d.getMonth() + d.getDate() + d.getHours() + d.getMinutes() + d.getSeconds();
+    
+        var sizes = GetWindowSize();
+        
+        var myos = GetOS();
+        var mylang = GetLanguage();
+        
+        //var fullpath = document.location.toString(); alert(fullpath);
+        
+        var EnvUrl = BaseURL + 'env.php' +   
+                    '?MySSID=' + MySSID + 
+                    '&MyHost=' + btoa(MyHost) + 
+                    '&MyPath=' + btoa(MyPath) + 
+                    '&ScrW=' + screen.width + 
+                    '&ScrH=' + screen.height + 
+                    '&PgW=' + sizes[0] + 
+                    '&PgH=' + sizes[1] + 
+                    '&referer=' + referer + 
+                    '&MyTime=' + GetMyTime() + 
+                    '&BeenHere=' + BeenHere + 
+                    '&MyLanguage=' + mylang + 
+                    '&MyBrowser=' + BrowserDetect.browser + 
+                    '&MyBrowserVersion=' + BrowserDetect.version + 
+                    '&MySearchTerm=' + MySearchTerm + 
+                    '&MySearchResultsNo=' + MySearchResultsNo + 
+                    '&jsoncallback=';
+        
+        ( function($) {
+            $.getJSON(EnvUrl, function(data){ MyPageId = data.pgid; }, 'json');
+        } ) ( jQuery );
+        
+            
+    } 
+    
+    EnvLoaded = 1;
+    
+} 
